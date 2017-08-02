@@ -26,3 +26,54 @@ q1 <- function() {
     result <- which(agricultureLogical)
     result
 }
+
+
+q2 <- function() {
+    
+    library(jpeg)
+    
+    fileURL <- "https://d396qusza40orc.cloudfront.net/getdata%2Fjeff.jpg"
+    dataFile <- "./pic.jpg"
+    # mode = "wb" required for binary file download, otherwise they get corrupted
+    download.file(fileURL, destfile = dataFile, mode = "wb")
+    data <- readJPEG(dataFile, native = TRUE)
+    
+    # Use the parameter native=TRUE. What are the 30th and 80th quantiles of the resulting data?
+    # (some Linux systems may produce an answer 638 different for the 30th quantile)
+    
+    result <- quantile(data, c(0.3, 0.8))
+    result
+}
+
+
+
+
+q3 <- function() {
+    
+    # Load the Gross Domestic Product data for the 190 ranked countries in this data set:
+    fileURL <- "https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2FGDP.csv"
+    dataFile <- "./data_gdp.csv"
+    download.file(fileURL, destfile = dataFile)
+    gdp <- read.csv(dataFile, header = TRUE)
+    
+    # Load the educational data from this data set:
+    fileURL <- "https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2FEDSTATS_Country.csv"
+    dataFile2 <- "./data_edu.csv"
+    download.file(fileURL, destfile = dataFile2)
+    edu <- read.csv(dataFile2, header = TRUE)
+    
+    # Match the data based on the country shortcode. How many of the IDs match? 
+    data <- merge(gdp, edu, by.x="X", by.y="CountryCode", all = FALSE)
+    
+    # Original data sources: 
+    #  http://data.worldbank.org/data-catalog/GDP-ranking-table
+    #  http://data.worldbank.org/data-catalog/ed-stats
+    
+    # Sort the data frame in descending order by GDP rank (so United States is last).
+    # What is the 13th country in the resulting data frame?
+    #adata <- arrange(data, desc(data$X.2))
+}
+
+
+
+
