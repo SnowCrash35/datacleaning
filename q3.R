@@ -60,7 +60,7 @@ q3 <- function() {
     
     # Clean the GDP data
     gdp <- gdp[-c(1:4), c(1,2,4,5)]; # remove empty columns and unwanted top rows
-    names(gdp) <- c("CountryCode", "Ranking", "Economy", "Millions USD") # rename columns
+    names(gdp) <- c("CountryCode", "Ranking", "Economy", "MillionsUSD") # rename columns
     gdp <- gdp[c(1:190),] # remove empty trailing rows
     gdp$Ranking <- as.numeric(as.character(gdp$Ranking)) # convert Ranking from factor to numeric
     
