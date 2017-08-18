@@ -50,11 +50,20 @@ q2 <- function() {
 
 q3 <- function() {
     
+    library(dplyr)
+    
     # Load the Gross Domestic Product data for the 190 ranked countries in this data set:
     fileURL <- "https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2FGDP.csv"
     dataFile <- "./data_gdp.csv"
     download.file(fileURL, destfile = dataFile)
     gdp <- read.csv(dataFile, header = TRUE)
+    
+    # Clean the GDP data
+    gdp <- gdp[-c(1:4), c(1,2,4,5)]; # remove empty columns and unwanted top rows
+    names(gdp) <- c("CountryCode", "Ranking", "Economy", "Millions USD") # rename columns
+    gdp <- gdp[c(1:190),] # remove empty trailing rows
+    gdp$Ranking <- as.numeric(as.character(gdp$Ranking)) # convert Ranking from factor to numeric
+    
     
     # Load the educational data from this data set:
     fileURL <- "https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2FEDSTATS_Country.csv"
@@ -63,7 +72,7 @@ q3 <- function() {
     edu <- read.csv(dataFile2, header = TRUE)
     
     # Match the data based on the country shortcode. How many of the IDs match? 
-    data <- merge(gdp, edu, by.x="X", by.y="CountryCode", all = FALSE)
+    data <- merge(gdp, edu, by.x="CountryCode", by.y="CountryCode", all = FALSE)
     
     # Original data sources: 
     #  http://data.worldbank.org/data-catalog/GDP-ranking-table
@@ -71,7 +80,38 @@ q3 <- function() {
     
     # Sort the data frame in descending order by GDP rank (so United States is last).
     # What is the 13th country in the resulting data frame?
-    #adata <- arrange(data, desc(data$X.2))
+    adata <- arrange(data, desc(data$Ranking))
+    
+    print("Number of matches")
+    print(nrow(adata))
+    
+    print("13th Ranked Country")
+    print(adata$Economy[13])
+    
+    
+    # Question 4:
+    # What is the average GDP ranking for the "High income: OECD" and "High income: nonOECD" group? 
+    
+    hioecd <- subset(adata, Income.Group=="High income: OECD")
+    hinoecd <- subset(adata, Income.Group=="High income: nonOECD")
+    
+    print("Average Ranking of High Income: OECD group")
+    mean(hioecd$Ranking)
+    
+    print("Average Ranking of High Income: nonOECD group")
+    mean(hinoecd$Ranking)
+    
+    # Question 5:
+    # Cut the GDP ranking into 5 separate quantile groups. Make a table versus Income.Group.
+    # How many countries are Lower middle income but among the 38 nations with highest GDP?
+    
+    # answer is 5, but did not use quantile to generate tables
+    #qdata <- quantile(adata, probs = seq(0, 1, 0.25), na.rm = TRUE)
+    
+}
+
+q4 <- function() {
+    
 }
 
 
